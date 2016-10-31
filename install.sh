@@ -6,7 +6,7 @@ cd $tmpdir
 
 # yum install -y git # if necessary
 # or download a tarball and decompress it instead
-git clone https://github.com/widdix/aws-ec2-ssh.git
+git clone https://github.com/articulate/aws-iam-ssh-auth.git
 
 cd $tmpdir/aws-ec2-ssh
 
