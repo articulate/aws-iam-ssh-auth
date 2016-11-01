@@ -18,7 +18,7 @@ aws iam list-users --query "Users[].[UserName]" --output text | while read User;
   if id -u "$User" >/dev/null 2>&1; then
     echo "$User exists"
   else
-    /usr/sbin/adduser "$User"
+    /usr/sbin/adduser --comment "IAM" "$User"
     echo "$User ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/$User"
   fi
 done
