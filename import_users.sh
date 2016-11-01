@@ -4,7 +4,7 @@ session_name="`hostname`-`date +%Y%m%d`"
 
 sts=( $(
     aws sts assume-role \
-    --role-arn "arn:aws:iam::689543204258:role/ssh-auth" \
+    --role-arn "arn:aws:iam::689543204258:role/allow-ssh" \
     --role-session-name "$session_name" \
     --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
     --output text
