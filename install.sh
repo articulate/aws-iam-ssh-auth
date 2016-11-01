@@ -8,10 +8,13 @@ cd $tmpdir
 # or download a tarball and decompress it instead
 git clone https://github.com/articulate/aws-iam-ssh-auth.git
 
-cd $tmpdir/aws-ec2-ssh
+cd $tmpdir/aws-iam-ssh-auth
 
 cp authorized_keys_command.sh /opt/authorized_keys_command.sh
+chmod +x /opt/authorized_keys_command.sh
+
 cp import_users.sh /opt/import_users.sh
+chmod +x /opt/import_users.sh
 
 sed -i 's:#AuthorizedKeysCommand none:AuthorizedKeysCommand /opt/authorized_keys_command.sh:g' /etc/ssh/sshd_config
 sed -i 's:#AuthorizedKeysCommandUser nobody:AuthorizedKeysCommandUser nobody:g' /etc/ssh/sshd_config
