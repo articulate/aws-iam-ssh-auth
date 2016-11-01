@@ -4,7 +4,9 @@ tmpdir=`mktemp -d`
 
 cd $tmpdir
 
-yum install -y git
+python -mplatform | grep -qi Ubuntu && sudo apt-get update || sudo yum update
+python -mplatform | grep -qi Ubuntu && apt-get install -y git || yum install -y git
+
 git clone https://github.com/articulate/aws-iam-ssh-auth.git
 
 cd $tmpdir/aws-iam-ssh-auth
