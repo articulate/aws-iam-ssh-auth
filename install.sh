@@ -25,4 +25,4 @@ chmod 0644 /etc/cron.d/import_users
 
 /opt/import_users.sh
 
-service sshd restart
+python -mplatform | grep -qi Ubuntu && service ssh restart || service sshd restart
