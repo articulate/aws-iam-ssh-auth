@@ -4,8 +4,13 @@ tmpdir=`mktemp -d`
 
 cd $tmpdir
 
-python -mplatform | grep -qi Ubuntu && sudo apt-get update || sudo yum update
-python -mplatform | grep -qi Ubuntu && apt-get install -y git || yum install -y git
+if [ -f /etc/lsb-release ]; then
+  sudo apt-get update
+  sudo apt-get install -y git
+else
+  sudo yum update
+  sudo yum install -y git
+fi
 
 git clone https://github.com/articulate/aws-iam-ssh-auth.git
 
@@ -30,4 +35,8 @@ chmod 0644 /etc/cron.d/import_users
 
 /opt/import_users.sh
 
-python -mplatform | grep -qi Ubuntu && service ssh restart || service sshd restart
+if [ -f /etc/lsb-release ]; then
+  service ssh restart
+else
+  service sshd restart
+fi
