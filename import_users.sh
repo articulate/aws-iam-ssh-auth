@@ -15,9 +15,7 @@ export AWS_SECRET_ACCESS_KEY="${sts[1]}"
 export AWS_SESSION_TOKEN="${sts[2]}"
 
 aws iam list-users --query "Users[].[UserName]" --output text | while read User; do
-  if id -u "$User" >/dev/null 2>&1; then
-    echo "$User exists"
-  else
+  if ! [ id -u "$User" >/dev/null 2>&1 ]; then
     python -mplatform | grep -qi Ubuntu && sudo /usr/sbin/adduser --gecos "" --disabled-password "$User" || /usr/sbin/adduser --comment "IAM" "$User"
     echo "$User ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/$User"
     chmod 0440 /etc/sudoers.d/$User
