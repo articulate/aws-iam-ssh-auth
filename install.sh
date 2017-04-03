@@ -30,7 +30,7 @@ else
   sed -i 's:#AuthorizedKeysCommandUser nobody:AuthorizedKeysCommandUser nobody:g' /etc/ssh/sshd_config
 fi
 
-echo "*/10 * * * * root /opt/import_users.sh" > /etc/cron.d/import_users
+echo "*/10 * * * * root /opt/import_users.sh 2>&1 > /var/log/import-users.log" > /etc/cron.d/import_users
 chmod 0644 /etc/cron.d/import_users
 
 /opt/import_users.sh
