@@ -20,4 +20,5 @@ aws iam list-users --query "Users[].[UserName]" --output text | while read User;
   python -mplatform | grep -qi Ubuntu && sudo /usr/sbin/adduser --gecos "" --disabled-password "$User" || /usr/sbin/adduser --comment "IAM" "$User"
   echo "$User ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/$User"
   chmod 0440 /etc/sudoers.d/$User
+  chown -R $User:$User /home/$User
 done
