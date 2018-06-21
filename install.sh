@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sshdConfig="/etc/ssh/sshd_config"
 tmpdir=`mktemp -d`
 
 cd $tmpdir
@@ -22,12 +23,15 @@ chmod +x /opt/authorized_keys_command.sh
 cp import_users.sh /opt/import_users.sh
 chmod +x /opt/import_users.sh
 
-if [ -f /etc/lsb-release ]; then
-  echo "AuthorizedKeysCommand /opt/authorized_keys_command.sh" >> /etc/ssh/sshd_config
-  echo "AuthorizedKeysCommandUser nobody" >> /etc/ssh/sshd_config
-else
-  sed -i 's:#AuthorizedKeysCommand none:AuthorizedKeysCommand /opt/authorized_keys_command.sh:g' /etc/ssh/sshd_config
-  sed -i 's:#AuthorizedKeysCommandUser nobody:AuthorizedKeysCommandUser nobody:g' /etc/ssh/sshd_config
+
+if ! grep -q ^AuthorizedKeysCommand $sshdConfig; then
+  if [ -f /etc/lsb-release ]; then
+    echo "AuthorizedKeysCommand /opt/authorized_keys_command.sh" >> $sshdConfig
+    echo "AuthorizedKeysCommandUser nobody" >> $sshdConfig
+  else
+    sed -i 's:#AuthorizedKeysCommand none:AuthorizedKeysCommand /opt/authorized_keys_command.sh:g' $sshdConfig
+    sed -i 's:#AuthorizedKeysCommandUser nobody:AuthorizedKeysCommandUser nobody:g' $sshdConfig
+  fi
 fi
 
 echo "@reboot root /opt/import_users.sh > /var/log/import-users.log 2>&1" > /etc/cron.d/import_users
