@@ -5,12 +5,14 @@ tmpdir=`mktemp -d`
 
 cd $tmpdir
 
-if [ -f /etc/lsb-release ]; then
-  sudo apt-get update
-  sudo apt-get install -y git
-else
-  sudo yum update
-  sudo yum install -y git
+if ! [ -x "$(command -v git)" ]; then
+  if [ -f /etc/lsb-release ]; then
+    sudo apt-get update
+    sudo apt-get install -y git
+  else
+    sudo yum update
+    sudo yum install -y git
+  fi
 fi
 
 git clone https://github.com/articulate/aws-iam-ssh-auth.git
@@ -32,6 +34,12 @@ if ! grep -q ^AuthorizedKeysCommand $sshdConfig; then
     sed -i 's:#AuthorizedKeysCommand none:AuthorizedKeysCommand /opt/authorized_keys_command.sh:g' $sshdConfig
     sed -i 's:#AuthorizedKeysCommandUser nobody:AuthorizedKeysCommandUser nobody:g' $sshdConfig
   fi
+
+  if [ -f /etc/lsb-release ]; then
+    service ssh restart
+  else
+    service sshd restart
+  fi
 fi
 
 echo "@reboot root /opt/import_users.sh > /var/log/import-users.log 2>&1" > /etc/cron.d/import_users
@@ -39,9 +47,3 @@ echo "*/10 * * * * root /opt/import_users.sh > /var/log/import-users.log 2>&1" >
 chmod 0644 /etc/cron.d/import_users
 
 /opt/import_users.sh
-
-if [ -f /etc/lsb-release ]; then
-  service ssh restart
-else
-  service sshd restart
-fi
