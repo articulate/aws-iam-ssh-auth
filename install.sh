@@ -5,6 +5,7 @@ tmpdir=`mktemp -d`
 
 cd $tmpdir
 
+# only runs if git isn't already installed
 if ! [ -x "$(command -v git)" ]; then
   if [ -f /etc/lsb-release ]; then
     sudo apt-get update
